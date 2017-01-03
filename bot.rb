@@ -40,10 +40,10 @@ client.on :message do |data|
       }
       client.message(params)
     else
-      rest_client.update(tweet_text + " from #reiankyo")
+      result = rest_client.update(tweet_text + " from #reiankyo")
       params = {
         channel: "C03ANSF4X",
-        text: "呟きました。(いい感じについーとのURLを貼り付けたい)"
+        text: "呟きました。https://twitter.com/jf_nights/status/#{result.id}"
       }
       client.message(params)
     end
