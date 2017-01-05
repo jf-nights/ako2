@@ -1,12 +1,6 @@
-require 'pp'
 require 'json'
 require 'open-uri'
-
-TOKEN = open("/home/jf712/.slack/ako").read.split("\n")[1]
-ENV['SLACK_API_TOKEN'] = TOKEN
-def postMessage(message)
-  system("slack chat postMessage --text=\"#{message}\" --channel=\"#reiankyo\" --as_user=\"true\" --username=\"ako\" --icon_emoji=\"ako\"")
-end
+require_relative './post_to_slack'
 
 def postTodayWeather()
   # weather_id の読み込み
@@ -39,22 +33,9 @@ def postTodayWeather()
   sub = "気温は#{min}℃～#{max}℃です。"
 
   # slackに発言
-  postMessage(description)
-  postMessage(sub)
-  postMessage(icon_url)
-end
-
-def postTodayHoroscope()
-  today = Time.now.strftime("%Y/%m/%d")
-  url = "http://api.jugemkey.jp/api/horoscope/free/#{today}"
-  response = open(url)
-  result = JSON.parse(response.read)
-  horoscopes = result["horoscope"]["#{today}"]
-  cancer = horoscopes.select {|h| h["sign"] == "蟹座"}
-
-  desc = "本日のラッキーアイテムは #{cancer[0]["item"]} です。"
-  postMessage(desc)
+  SlackLib.postMessage(description)
+  SlackLib.postMessage(sub)
+  SlackLib.postMessage(icon_url)
 end
 
 postTodayWeather()
-postTodayHoroscope()
