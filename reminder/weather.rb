@@ -1,3 +1,4 @@
+require 'pp'
 require 'json'
 require 'open-uri'
 
@@ -7,22 +8,36 @@ def postMessage(message)
   system("slack chat postMessage --text=\"#{message}\" --channel=\"#reiankyo\" --as_user=\"true\" --username=\"ako\" --icon_emoji=\"ako\"")
 end
 
+# weather_id の読み込み
+weather_id = JSON.load(open("../weather/weather_id.json"))
+
 API_KEY = open("/home/jf712/.weather/ako").read.split("\n")[0]
 BASE_URL = "http://api.openweathermap.org/data/2.5/forecast"
 
-response = open(BASE_URL + "/daily?id=1857910&cnt=1&units=metric&APPID=#{API_KEY}")
+# APIへ
+response = open(BASE_URL + "/daily?id=1857910&units=metric&APPID=#{API_KEY}")
 result = JSON.parse(response.read)
+# これが当日のforecast?なんか朝に叩くとおかしかった(最高・最低気温が同じだった
+data = result["list"][0]
 
-desc = result["list"][0]["weather"][0]["description"]
-rain = result["list"][0]["rain"]
-max = result["list"][0]["temp"]["max"]
-min = result["list"][0]["temp"]["min"]
-icon = result["list"][0]["weather"][0]["icon"]
+# 時間
+time = Time.at(data["dt"]).strftime("%Y/%m/%d")
+# 天気の説明
+desc = weather_id[data["weather"][0]["id"].to_s]
+# 最高気温
+max = data["temp"]["max"]
+# 最低気温
+min = data["temp"]["min"]
+# 湿度
+humidity = data["humidity"]
+# お天気アイコンとそのURL
+icon = data["weather"][0]["icon"]
 icon_url = "http://openweathermap.org/img/w/#{icon}.png"
 
-description = "今日の京都の天気は #{desc}"
-sub = "気温は#{min}℃～#{max}℃で、降水確率は#{rain.to_f * 100}%です。"
+description = "#{time} の京都の天気は #{desc} です。"
+sub = "気温は#{min}℃～#{max}℃です。"
 
+# slackに発言
 postMessage(description)
 postMessage(sub)
 postMessage(icon_url)
