@@ -23,29 +23,31 @@ end
 
 client.on :message do |data|
   pp data
-  if data.text == "おはようございます"
-    params = {
-      channel: "C03ANSF4X",
-      text: "おはようございます"
-    }
-    client.message(params)
-  elsif data.text =~ /^tweet (.*)/
-    tweet_text = $1
-    # DM を弾きます
-    if tweet_text =~ /^[dD][mM]? .*/ || tweet_text =~ /[mM] @.*/
-      puts "DIRECT MESSAGE"
-       params = {
-        channel: "C03ANSF4X",
-        text: "ダイレクトメッセージはダ(イレクト)メ(ッセージ)です。"
-      }
-      client.message(params)
-    else
-      result = rest_client.update(tweet_text + " from #reiankyo")
+  if data.channel == "C03ANSF4X"
+    if data.text == "おはようございます"
       params = {
         channel: "C03ANSF4X",
-        text: "呟きました。https://twitter.com/jf_nights/status/#{result.id}"
+        text: "おはようございます"
       }
       client.message(params)
+    elsif data.text =~ /^tweet (.*)/
+      tweet_text = $1
+      # DM を弾きます
+      if tweet_text =~ /^[dD][mM]? .*/ || tweet_text =~ /[mM] @.*/
+        puts "DIRECT MESSAGE"
+        params = {
+          channel: "C03ANSF4X",
+          text: "ダイレクトメッセージはダ(イレクト)メ(ッセージ)です。"
+        }
+        client.message(params)
+      else
+        result = rest_client.update(tweet_text + " from #reiankyo")
+        params = {
+          channel: "C03ANSF4X",
+          text: "呟きました。https://twitter.com/jf_nights/status/#{result.id}"
+        }
+        client.message(params)
+      end
     end
   end
 
