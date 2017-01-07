@@ -1,6 +1,7 @@
 require 'pp'
 require 'twitter'
 require 'slack-ruby-client'
+require_relative './lib/docomo'
 
 # Twitterぶぶん
 twitter_token = open("/home/jf712/.twitter/jf_nights").read.split("\n")
