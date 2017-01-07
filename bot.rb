@@ -1,6 +1,7 @@
 require 'pp'
 require 'twitter'
 require 'slack-ruby-client'
+require_relative './lib/docomo'
 
 # Twitterぶぶん
 twitter_token = open("/home/jf712/.twitter/jf_nights").read.split("\n")
@@ -14,6 +15,15 @@ end
 # 見ちゃダメよ
 TOKEN = open("/home/jf712/.slack/ako").read.split("\n")[1]
 
+# Slackに投稿する時のparam(channel を書くのが面倒だった)
+def makeParam(text, channel="C03ANSF4X")
+  params = {
+    channel: channel,
+    text: text
+  }
+  return params
+end
+
 Slack.configure {|c| c.token = TOKEN}
 client = Slack::RealTime::Client.new
 
@@ -24,6 +34,9 @@ end
 client.on :message do |data|
   pp data
   if data.channel == "C03ANSF4X"
+    # docomoAPI用のcontext
+    context = ""
+
     if data.text == "おはようございます"
       params = {
         channel: "C03ANSF4X",
@@ -31,26 +44,39 @@ client.on :message do |data|
       }
       client.message(params)
     elsif data.text =~ /^tweet (.*)/
+      # /^tweet (.*)/ で $1 をメッセージとしてツイート
       tweet_text = $1
       # DM を弾きます
       if tweet_text =~ /^[dD][mM]? .*/ || tweet_text =~ /[mM] @.*/
-        puts "DIRECT MESSAGE"
-        params = {
-          channel: "C03ANSF4X",
-          text: "ダイレクトメッセージはダ(イレクト)メ(ッセージ)です。"
-        }
+        params = makeParam("ダイレクトメッセージはダ(イレクト)メ(ッセージ)です。")
         client.message(params)
       else
         result = rest_client.update(tweet_text + " from #reiankyo")
-        params = {
-          channel: "C03ANSF4X",
-          text: "呟きました。https://twitter.com/jf_nights/status/#{result.id}"
-        }
+        params = makeParam("呟きました。https://twitter.com/jf_nights/status/#{result.id}")
         client.message(params)
       end
+    elsif data.text =~ /^[dｄ] (.*)/
+      # docomo の雑談API
+      # /^[d|ｄ] (.*)/ で $1 をメッセージとする
+      text = $1
+      response = DocomoAPI.post(text, context)
+
+      if response["requestError"] == nil
+        message = response["utt"] + " [d]"
+        context = response["context"]
+        client.message(makeParam(message))
+      else
+        # error!
+        client.message(makeParam(response))
+      end
+    elsif data.text =~ /^[qQ][aA] (.*)/
+      # docomo の知識Q&A API
+      # /^[qQ][aA] (.*) で $1 を質問内容とする
+      text = $1
+      response = DocomoAPI.postQA(text)
+      client.message(makeParam(response + " [Q&A]"))
     end
   end
-
 end
 
 client.start!
