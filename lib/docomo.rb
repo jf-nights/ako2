@@ -56,7 +56,7 @@ module DocomoAPI
     else
       if res["requestError"] == nil
         # 回答ナシ
-        return res["message"]
+        return res["message"]["textForDisplay"]
       else
         # そもそもエラー
         return res

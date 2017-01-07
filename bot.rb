@@ -74,7 +74,7 @@ client.on :message do |data|
       # /^[qQ][aA] (.*) で $1 を質問内容とする
       text = $1
       response = DocomoAPI.postQA(text)
-      client.message(makeParam(response + " [Q&A]"))
+      client.message(makeParam(response.to_s + " [Q&A]"))
     end
   end
 end
