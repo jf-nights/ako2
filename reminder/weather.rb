@@ -10,7 +10,10 @@ def postTodayWeather()
   base_url = "http://api.openweathermap.org/data/2.5/forecast"
 
   # APIへ
-  response = open(base_url + "/daily?id=1857910&units=metric&APPID=#{api_key}")
+  # 京都市
+  #response = open(base_url + "/daily?id=1857910&units=metric&APPID=#{api_key}")
+  # 札幌市
+  response = open(base_url + "/daily?id=2128295&units=metric&APPID=#{api_key}")
   result = JSON.parse(response.read)
   # これが当日のforecast?なんか朝に叩くとおかしかった(最高・最低気温が同じだった
   data = result["list"][0]
@@ -29,7 +32,8 @@ def postTodayWeather()
   icon = data["weather"][0]["icon"]
   icon_url = "http://openweathermap.org/img/w/#{icon}.png"
 
-  description = "#{time} の京都の天気は #{desc} です。"
+  #description = "#{time} の京都の天気は #{desc} です。"
+  description = "#{time} の札幌市の天気は #{desc} です。"
   sub = "気温は#{min}℃～#{max}℃です。"
 
   # slackに発言
