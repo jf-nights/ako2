@@ -1,19 +1,16 @@
-require 'pp'
-require 'twitter'
-require 'slack-ruby-client'
-require_relative './lib/docomo'
+Bundler.require
 
-# Twitterぶぶん
-twitter_token = open("/home/jf712/.twitter/jf_nights").read.split("\n")
-rest_client = Twitter::REST::Client.new do |c|
-  c.consumer_key = twitter_token[0]
-  c.consumer_secret = twitter_token[1]
-  c.access_token = twitter_token[2]
-  c.access_token_secret = twitter_token[3]
-end
+# 水温計
+DEVICE_W_ID = "28-0516a4c7a8ff"
+result = `cat /sys/bus/w1/devices/#{DEVICE_W_ID}/w1_slave`
+temperature_w = (result.split("\s").last.gsub("t=","").to_i / 1000.0).round(2)
+DEVICE_A_ID = "28-0516a353feff"
+result = `cat /sys/bus/w1/devices/#{DEVICE_A_ID}/w1_slave`
+temperature_a = (result.split("\s").last.gsub("t=","").to_i / 1000.0).round(2)
+
 
 # 見ちゃダメよ
-TOKEN = open("/home/jf712/.slack/ako").read.split("\n")[1]
+TOKEN = open("/home/pi/.slack/ako").read.split("\n")[1]
 
 # Slackに投稿する時のparam(channel を書くのが面倒だった)
 def makeParam(text, channel="C03ANSF4X")
@@ -32,49 +29,16 @@ client.on :hello do
 end
 
 client.on :message do |data|
-  pp data
   if data.channel == "C03ANSF4X"
-    # docomoAPI用のcontext
-    context = ""
-
-    if data.text == "おはようございます"
-      params = {
-        channel: "C03ANSF4X",
-        text: "おはようございます"
-      }
+    if data.text == "test"
+      params = makeParam("test")
       client.message(params)
-    elsif data.text =~ /^tweet (.*)/
-      # /^tweet (.*)/ で $1 をメッセージとしてツイート
-      tweet_text = $1
-      # DM を弾きます
-      if tweet_text =~ /^[dD][mM]? .*/ || tweet_text =~ /[mM] @.*/
-        params = makeParam("ダイレクトメッセージはダ(イレクト)メ(ッセージ)です。")
-        client.message(params)
-      else
-        result = rest_client.update(tweet_text + " from #reiankyo")
-        params = makeParam("呟きました。https://twitter.com/jf_nights/status/#{result.id}")
-        client.message(params)
-      end
-    elsif data.text =~ /^[dｄ] (.*)/
-      # docomo の雑談API
-      # /^[d|ｄ] (.*)/ で $1 をメッセージとする
-      text = $1
-      response = DocomoAPI.post(text, context)
-
-      if response["requestError"] == nil
-        message = response["utt"] + " [d]"
-        context = response["context"]
-        client.message(makeParam(message))
-      else
-        # error!
-        client.message(makeParam(response))
-      end
-    elsif data.text =~ /^[qQ][aA] (.*)/
-      # docomo の知識Q&A API
-      # /^[qQ][aA] (.*) で $1 を質問内容とする
-      text = $1
-      response = DocomoAPI.postQA(text)
-      client.message(makeParam(response.to_s + " [Q&A]"))
+    elsif data.text == "水温"
+      params = makeParam("現在のぺとらさんの水温は #{temperature_w}℃です！")
+      client.message(params)
+    elsif data.text == "室温"
+      params = makeParam("現在のお部屋の温度は #{temperature_a}℃です！")
+      client.message(params)
     end
   end
 end
