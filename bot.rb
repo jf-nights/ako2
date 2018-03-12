@@ -2,6 +2,7 @@ require 'pp'
 require 'twitter'
 require 'slack-ruby-client'
 require_relative './lib/docomo'
+require_relative './ako'
 
 # Twitterぶぶん
 twitter_token = open("/home/jf712/.twitter/jf_nights").read.split("\n")
@@ -27,19 +28,26 @@ end
 Slack.configure {|c| c.token = TOKEN}
 client = Slack::RealTime::Client.new
 
+# 阿古さん本体
+ako = Ako.new(client)
+
 client.on :hello do
+  params = {
+    channel: "C9PDZET9V",
+    text: "システム起動しました"
+  }
+  client.message(params)
   puts "connected!"
 end
 
 client.on :message do |data|
-  pp data
-  if data.channel == "C03ANSF4X"
+  if data.channel == "C9PDZET9V"
     # docomoAPI用のcontext
     context = ""
 
     if data.text == "おはようございます"
       params = {
-        channel: "C03ANSF4X",
+        channel: "C9PDZET9V",
         text: "おはようございます"
       }
       client.message(params)
