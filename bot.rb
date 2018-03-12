@@ -41,7 +41,11 @@ client.on :hello do
 end
 
 client.on :message do |data|
+  # とりあえず #ako-secret-memo のときのみ
   if data.channel == "C9PDZET9V"
+    pp data
+    ako.recieve(data)
+    
     # docomoAPI用のcontext
     context = ""
 
