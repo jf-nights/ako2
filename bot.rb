@@ -67,20 +67,6 @@ client.on :message do |data|
         params = makeParam("呟きました。https://twitter.com/jf_nights/status/#{result.id}")
         client.message(params)
       end
-    elsif data.text =~ /^[dｄ] (.*)/
-      # docomo の雑談API
-      # /^[d|ｄ] (.*)/ で $1 をメッセージとする
-      text = $1
-      response = DocomoAPI.post(text, context)
-
-      if response["requestError"] == nil
-        message = response["utt"] + " [d]"
-        context = response["context"]
-        client.message(makeParam(message))
-      else
-        # error!
-        client.message(makeParam(response))
-      end
     elsif data.text =~ /^[qQ][aA] (.*)/
       # docomo の知識Q&A API
       # /^[qQ][aA] (.*) で $1 を質問内容とする
