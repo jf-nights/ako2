@@ -1,4 +1,6 @@
+require_relative './lib/utils'
 require_relative './responder'
+
 # 阿古さん本体
 class Ako
   def initialize(slack_client)
@@ -11,15 +13,8 @@ class Ako
     puts "ready......!"
   end
 
-  def makeParam(text, channel="C9PDZET9V")
-    params = {
-      text: text,
-      channel: channel
-    }
-    return params
-  end
-
   # メッセージを受け取る際の関数
+  # ここで受け取って各reponder#response で返事を作って返す
   # 今のところ受け取るdataの中身こんんあん
   # {
   #   "type"=>"message",
@@ -39,8 +34,7 @@ class Ako
     # docomo の雑談API
     # ---------------------------
     if data.text =~ /^[dｄ] (.*)/
-      text = $1
-      resp = @responder_DocomoAPI.response(text, @context)
+      resp = @responder_DocomoAPI.response($1, @context)
       @slack_client.message(makeParam(resp["message"]))
       @context = resp["context"] if resp["context"] != nil
       puts @context
