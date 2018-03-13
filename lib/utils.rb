@@ -1,5 +1,5 @@
 # なんかいろいろ使い回しそうな関数
-def makeparam(text, channel="C9PDZET9V")
+def makeParam(text, channel="C9PDZET9V")
   params = {
     text: text,
     channel: channel
