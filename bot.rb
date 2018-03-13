@@ -46,9 +46,6 @@ client.on :message do |data|
     pp data
     ako.recieve(data)
     
-    # docomoAPI用のcontext
-    context = ""
-
     if data.text == "おはようございます"
       params = {
         channel: "C9PDZET9V",

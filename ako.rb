@@ -1,10 +1,14 @@
-require_relative './lib/docomo'
-
+require_relative './responder'
 # 阿古さん本体
 class Ako
-  def initialize(client)
-    @client = client
+  def initialize(slack_client)
+    @slack_client = slack_client
     @context = ""
+
+    # respnoder
+    @responder_DocomoAPI = DocomoResponder.new
+
+    puts "ready......!"
   end
 
   def makeParam(text, channel="C9PDZET9V")
@@ -28,7 +32,7 @@ class Ako
   # }
   def recieve(data)
     if data.text == "おやすみなさい"
-      @client.message(makeParam("おやすみなさいませ"))
+      @slack_client.message(makeParam("おやすみなさいませ、<@#{data.user}>さま"))
     end
 
     # ---------------------------
@@ -36,15 +40,10 @@ class Ako
     # ---------------------------
     if data.text =~ /^[dｄ] (.*)/
       text = $1
-      response = DocomoAPI.post(text, @context)
-
-      if response["requestError"] == nil
-        message = response["utt"] + " [by docomoAPI]"
-        @context = response["context"]
-        @client.message(makeParam(message))
-      else
-        @client.message(makeParam(response))
-      end
+      resp = @responder_DocomoAPI.response(text, @context)
+      @slack_client.message(makeParam(resp["message"]))
+      @context = resp["context"] if resp["context"] != nil
+      puts @context
     end
   end
 end
