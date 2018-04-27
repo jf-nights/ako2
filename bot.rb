@@ -12,11 +12,13 @@ client = Slack::RealTime::Client.new
 # 阿古さん本体
 ako = Ako.new(client)
 
+# 起動時
 client.on :hello do
   client.message(makeParam("システム起動しました！"))
   puts "connected!"
 end
 
+# メッセージ受信
 client.on :message do |data|
   # とりあえず #ako-secret-memo のときのみ
   if data.channel == "C9PDZET9V"
@@ -25,12 +27,13 @@ client.on :message do |data|
   end
 end
 
+# 切断時
 client.on :close do |data|
   # わざわざこのためだけに使うのもアレやけど......
   SlackLib.postMessage("システム終了します......", "#ako-secret-room")
-  puts "Client is about to disconnect"
 end
 
+# 切断完了
 client.on :closed do |data|
   puts "Client has disconnected successfully!"
 end
