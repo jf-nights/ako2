@@ -1,4 +1,6 @@
+require 'google/cloud/language'
 require_relative './lib/utils'
+require_relative './lib/gcl'
 require_relative './responder'
 
 # 阿古さん本体
@@ -7,6 +9,8 @@ class Ako
     @slack_client = slack_client
     @context = ""
 
+    # Google Cloud Language
+    GCL.init
     # respnoder
     @responder_DocomoAPI = DocomoResponder.new
 
@@ -35,6 +39,10 @@ class Ako
     if data.text == "おやすみなさい"
       param = makeParam("おやすみなさいませ、<@#{data.user}>さま")
     end
+
+    gclResult = GCL.getScore(data.text)
+    score, magnitude = gclResult[0], gclResult[1]
+    param = makeParam("Score : #{score}, Magnitude : #{magnitude} です")
 
     case rand(100)
     when 99
