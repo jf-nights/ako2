@@ -1,5 +1,6 @@
 # ジェイ・アール生鮮市場 発寒店
 # http://jr-seisen.jp/hassamu/ の最新チラシ情報
+require 'mechanize'
 require_relative './post_to_slack'
 
 SITE_URL = "http://jr-seisen.jp/hassamu/"
