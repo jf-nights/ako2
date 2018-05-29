@@ -1,6 +1,7 @@
 require 'google/cloud/language'
 require_relative './lib/utils'
 require_relative './lib/gcl'
+require_relative './lib/gohan'
 require_relative './responder'
 
 # 阿古さん本体
@@ -37,16 +38,25 @@ class Ako
     # 「おやすみなさい」
     # ---------------------------
     if data.text == "おやすみなさい"
-      param = makeParam("おやすみなさいませ、<@#{data.user}>さま")
+      param = makeParam("おやすみなさいませ、<@#{data.user}>さま", data.channel)
     end
 
+=begin
     gclResult = GCL.getScore(data.text)
     score, magnitude = gclResult[0], gclResult[1]
     param = makeParam("Score : #{score}, Magnitude : #{magnitude} です")
+=end
+
+    if data.user == "U035ULAP5"
+      if data.text =~ /ごはん:/
+        res = gohanCheck(data)
+        param = makeParam(res, REIANKYO)
+      end
+    end
 
     case rand(100)
     when 99
-      param = makeParam("#{data.text}とはなんですか？")
+      param = makeParam("#{data.text}とはなんですか？", data.channel)
     end
 
     # ---------------------------

@@ -20,9 +20,9 @@ end
 
 # メッセージ受信
 client.on :message do |data|
-  # とりあえず #ako-secret-memo のときのみ
-  if data.channel == "C9PDZET9V"
-    pp data
+  # C9PDZET9V #ako-secret-memo
+  # C03ANSF4X #reiankyo
+  if data.channel == "C9PDZET9V" || data.channel == "C03ANSF4X"
     ako.recieve(data)
   end
 end
