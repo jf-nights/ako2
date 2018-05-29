@@ -14,7 +14,7 @@ ako = Ako.new(client)
 
 # 起動時
 client.on :hello do
-  client.message(makeParam("システム起動しました！"))
+  #client.message(makeParam("システム起動しました！"))
   puts "connected!"
 end
 
@@ -30,7 +30,7 @@ end
 # 切断時
 client.on :close do |data|
   # わざわざこのためだけに使うのもアレやけど......
-  SlackLib.postMessage("システム終了します......", "#ako-secret-room")
+  #SlackLib.postMessage("システム終了します......", "#ako-secret-room")
 end
 
 # 切断完了
