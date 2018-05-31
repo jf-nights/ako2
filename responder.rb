@@ -11,12 +11,12 @@ require_relative './lib/docomo'
 #   "team"=>"T0321RSJ5"
 # }
 class Responder
-  def initialize
-
+  def initialize(dictionary)
+    @dictionary = dictionary
   end
 
   def response
-    return ""
+    return nil
   end
 end
 
@@ -34,5 +34,12 @@ class DocomoResponder < Responder
       # 失敗時はresponseをそのまま返し、contextは空にする
       return {"message"=>response, "context"=>nil}
     end
+  end
+end
+
+# Randomに返す
+class RandomResponder < Responder
+  def response(text, context)
+    resp = @dictionary.random[rand(@dictionary.random.size)]
   end
 end

@@ -13,10 +13,11 @@ class Ako
 
     # Google Cloud Language
     GCL.init
-    # respnoder
-    @responder_DocomoAPI = DocomoResponder.new
     # dictionary
     @dictionary = Dictionary.new
+    # responder
+    @responder_DocomoAPI = DocomoResponder.new(@dictionary)
+    @responder_Random = RandomResponder.new(@dictionary)
 
     puts "ready......!"
   end
@@ -34,8 +35,16 @@ class Ako
   #   "team"=>"T0321RSJ5"
   # }
   def recieve(data)
+    # 反応する機構
+    responder = nil
     # 発言すべき内容とチャンネルの入れもの
     param = nil
+    # -----------------------
+    # @responderを決める処理
+    # @responder = hoge
+    # response = @responder.response
+    # @slack_client.message(response) if response != nil
+    # という形にしたい
 
     # ---------------------------
     # 「おやすみなさい」
@@ -50,12 +59,12 @@ class Ako
     param = makeParam("Score : #{score}, Magnitude : #{magnitude} です")
 =end
 
-    case rand(100)
-    when 0
-      param = makeParam("#{data.text}とはなんですか？", data.channel)
-    when 1..99
-      param = makeParam(@dictionary.random[rand(@dictionary.random.size)], data.channel)
-    end
+    #case rand(100)
+    #when 0
+    #  param = makeParam("#{data.text}とはなんですか？", data.channel)
+    #when 0..99
+      responder = @responder_Random
+    #end
 
     # ---------------------------
     # docomo の雑談API
@@ -71,7 +80,7 @@ class Ako
     # 発言内容を覚える ...oO(<= "覚える" とは......?)
     # この時点では起動してるメモリ上に乗っているだけなので、
     # 何かしらの手段で @dictionary#save を呼ぶ必要がある...
-    @dictionary.study
+    @dictionary.study(data.text)
 
     # --------------------------
     # 僕からの発言で特別に扱いたいとき
@@ -92,6 +101,8 @@ class Ako
     # --------------------------
     # paramに発言内容とチャンネルが入っているので
     # 投稿
+    res = responder.response(data.text, @context)
+    param = makeParam(res, data.channel)
     @slack_client.message(param) if param != nil
   end
 end
