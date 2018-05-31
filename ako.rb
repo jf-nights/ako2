@@ -16,8 +16,9 @@ class Ako
     # dictionary
     @dictionary = Dictionary.new
     # responder
-    @responder_DocomoAPI = DocomoResponder.new(@dictionary)
+    @responder_What = WhatResponder.new(@dictionary)
     @responder_Random = RandomResponder.new(@dictionary)
+    #@responder_DocomoAPI = DocomoResponder.new(@dictionary)
 
     puts "ready......!"
   end
@@ -59,22 +60,25 @@ class Ako
     param = makeParam("Score : #{score}, Magnitude : #{magnitude} です")
 =end
 
-    #case rand(100)
-    #when 0
-    #  param = makeParam("#{data.text}とはなんですか？", data.channel)
-    #when 0..99
+    case rand(100)
+    when 0
+      responder = @responder_What
+    when 0..99
       responder = @responder_Random
-    #end
+    end
 
+=begin
     # ---------------------------
     # docomo の雑談API
     # ---------------------------
     if data.text =~ /^[dｄ] (.*)/
-      resp = @responder_DocomoAPI.response($1, @context)
-      param = makeParam(resp["message"])
-      @context = resp["context"] if resp["context"] != nil
-      puts @context
+      responder = @responder_DocomoAPI
+      #resp = @responder_DocomoAPI.response($1, @context)
+      #param = makeParam(resp["message"])
+      #@context = resp["context"] if resp["context"] != nil
+      #puts @context
     end
+=end
 
     # --------------------------
     # 発言内容を覚える ...oO(<= "覚える" とは......?)
@@ -99,9 +103,10 @@ class Ako
 
 
     # --------------------------
-    # paramに発言内容とチャンネルが入っているので
-    # 投稿
-    res = responder.response(data.text, @context)
+    # 今回のreponderで返答作成
+    res = responder.response(data.text)
+    # --------------------------
+    # paramに発言内容とチャンネルが入っているので投稿
     param = makeParam(res, data.channel)
     @slack_client.message(param) if param != nil
   end

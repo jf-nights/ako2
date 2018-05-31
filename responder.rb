@@ -20,6 +20,7 @@ class Responder
   end
 end
 
+=begin
 # docomoの雑談API
 class DocomoResponder < Responder
   def response(text, context)
@@ -36,10 +37,18 @@ class DocomoResponder < Responder
     end
   end
 end
+=end
+
+# ～とはなんですか
+class WhatResponder < Responder
+  def response(text)
+    resp = "#{text}とはなんですか？"
+  end
+end
 
 # Randomに返す
 class RandomResponder < Responder
-  def response(text, context)
+  def response(text)
     resp = @dictionary.random[rand(@dictionary.random.size)]
   end
 end
