@@ -22,7 +22,7 @@ end
 client.on :message do |data|
   # C9PDZET9V #ako-secret-memo
   # C03ANSF4X #reiankyo
-  if data.channel == "C9PDZET9V" || data.channel == "C03ANSF4X"
+  if data.channel == "C9PDZET9V"
     ako.recieve(data)
   end
 end

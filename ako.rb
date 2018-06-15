@@ -60,6 +60,7 @@ class Ako
     param = makeParam("Score : #{score}, Magnitude : #{magnitude} です")
 =end
 
+
     case rand(100)
     when 0
       responder = @responder_What
@@ -86,9 +87,11 @@ class Ako
     # 何かしらの手段で @dictionary#save を呼ぶ必要がある...
     @dictionary.study(data.text)
 
+
+=begin
     # --------------------------
     # 僕からの発言で特別に扱いたいとき
-    if data.user == "U035ULAP5"
+    if data.user == "U035ULAP5" && data.channel == REIANKYO
       # ごはん保存
       if data.text =~ /ごはん:/
         res = gohanCheck(data)
@@ -97,17 +100,23 @@ class Ako
 
       # 発言内容など覚えたことをファイル書き出し
       if data.text =~ /^save$/
-        @dictionary.save
+        save()
       end
     end
-
-
+=end
     # --------------------------
     # 今回のreponderで返答作成
     res = responder.response(data.text)
+
     # --------------------------
     # paramに発言内容とチャンネルが入っているので投稿
     param = makeParam(res, data.channel)
     @slack_client.message(param) if param != nil
+
+
+  end
+
+  def save
+    @dictionary.save
   end
 end
