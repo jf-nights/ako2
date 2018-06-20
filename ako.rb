@@ -2,13 +2,15 @@ require 'google/cloud/language'
 require_relative './lib/utils'
 require_relative './lib/gcl'
 require_relative './lib/gohan'
+require_relative './lib/get_channels'
 require_relative './responder'
 require_relative './dictionary'
 
 # 阿古さん本体
 class Ako
-  def initialize(slack_client)
+  def initialize(slack_client, web_client)
     @slack_client = slack_client
+    @web_client = web_client
     @context = ""
 
     # Google Cloud Language
@@ -52,7 +54,13 @@ class Ako
     # ---------------------------
     if data.text == "おやすみなさい"
       param = makeParam("おやすみなさいませ、<@#{data.user}>さま", data.channel)
-    end
+
+    elsif data.text =~ /どこやっけ/  && data.channel == DOKO
+      # #どこやっけ
+      message = "ここじゃないですか？ ##{select_channel}"
+      postByWebAPI(@web_client, message, DOKO)
+    else
+      if data.channel == SECRET_MEMO
 
 =begin
     gclResult = GCL.getScore(data.text)
@@ -61,12 +69,12 @@ class Ako
 =end
 
 
-    case rand(100)
-    when 0
-      responder = @responder_What
-    when 0..99
-      responder = @responder_Random
-    end
+        case rand(100)
+        when 0
+          responder = @responder_What
+        when 0..99
+          responder = @responder_Random
+        end
 
 =begin
     # ---------------------------
@@ -81,11 +89,11 @@ class Ako
     end
 =end
 
-    # --------------------------
-    # 発言内容を覚える ...oO(<= "覚える" とは......?)
-    # この時点では起動してるメモリ上に乗っているだけなので、
-    # 何かしらの手段で @dictionary#save を呼ぶ必要がある...
-    @dictionary.study(data.text)
+        # --------------------------
+        # 発言内容を覚える ...oO(<= "覚える" とは......?)
+        # この時点では起動してるメモリ上に乗っているだけなので、
+        # 何かしらの手段で @dictionary#save を呼ぶ必要がある...
+        @dictionary.study(data.text)
 
 
 =begin
@@ -104,13 +112,15 @@ class Ako
       end
     end
 =end
-    # --------------------------
-    # 今回のreponderで返答作成
-    res = responder.response(data.text)
+        # --------------------------
+        # 今回のreponderで返答作成
+        res = responder.response(data.text)
+      end
+    end
 
     # --------------------------
     # paramに発言内容とチャンネルが入っているので投稿
-    param = makeParam(res, data.channel)
+    param = makeParam(res, data.channel) if res != nil
     @slack_client.message(param) if param != nil
 
 

@@ -9,8 +9,11 @@ TOKEN = open("/home/jf712/.slack/ako").read.split("\n")[1]
 Slack.configure {|c| c.token = TOKEN}
 client = Slack::RealTime::Client.new
 
+# as_user: true とか link_names: true とか
+web_client = Slack::Web::Client.new
+
 # 阿古さん本体
-ako = Ako.new(client)
+ako = Ako.new(client, web_client)
 
 # 起動時
 client.on :hello do
@@ -22,7 +25,8 @@ end
 client.on :message do |data|
   # C9PDZET9V #ako-secret-memo
   # C03ANSF4X #reiankyo
-  if data.channel == "C9PDZET9V"
+  # CB8CHL7CM #どこやっけ
+  if data.channel == "C9PDZET9V" || data.channel == "CB8CHL7CM"
     ako.recieve(data)
   end
 end
