@@ -59,8 +59,23 @@ class Ako
       # #どこやっけ
       message = "ここじゃないですか？ ##{select_channel}"
       postByWebAPI(@web_client, message, DOKO)
+      # --------------------------
+      # 僕からの発言で特別に扱いたいとき
+    elsif data.user == "U035ULAP5" && data.channel == REIANKYO
+      # ごはん保存
+      if data.text =~ /ごはん:/
+        res = gohanCheck(data)
+        param = makeParam(res, REIANKYO)
+      end
+
+      # 発言内容など覚えたことをファイル書き出し
+      if data.text =~ /^save$/
+        save()
+      end
+
     else
       if data.channel == SECRET_MEMO
+        puts data.user
 
 =begin
     gclResult = GCL.getScore(data.text)
@@ -95,33 +110,18 @@ class Ako
         # 何かしらの手段で @dictionary#save を呼ぶ必要がある...
         @dictionary.study(data.text)
 
-
-=begin
-    # --------------------------
-    # 僕からの発言で特別に扱いたいとき
-    if data.user == "U035ULAP5" && data.channel == REIANKYO
-      # ごはん保存
-      if data.text =~ /ごはん:/
-        res = gohanCheck(data)
-        param = makeParam(res, REIANKYO)
-      end
-
-      # 発言内容など覚えたことをファイル書き出し
-      if data.text =~ /^save$/
-        save()
-      end
-    end
-=end
         # --------------------------
         # 今回のreponderで返答作成
         res = responder.response(data.text)
+        puts res
+
+        # --------------------------
+        # paramに発言内容とチャンネルが入っているので投稿
+        param = makeParam(res, data.channel) if res != nil
+        @slack_client.message(param) if param != nil
+
       end
     end
-
-    # --------------------------
-    # paramに発言内容とチャンネルが入っているので投稿
-    param = makeParam(res, data.channel) if res != nil
-    @slack_client.message(param) if param != nil
 
 
   end

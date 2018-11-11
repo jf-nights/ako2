@@ -27,7 +27,10 @@ client.on :message do |data|
   # C03ANSF4X #reiankyo
   # CB8CHL7CM #どこやっけ
   if data.channel == "C9PDZET9V" || data.channel == "CB8CHL7CM"
-    ako.recieve(data)
+    if data.user != "U03K389H4"
+      puts "recieve"
+      ako.recieve(data)
+    end
   end
 end
 

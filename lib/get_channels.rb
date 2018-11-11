@@ -3,7 +3,7 @@ require 'json'
 require 'open-uri'
 
 def select_channel
-  topen = open("/home/jf712/.slack/ako").read.split("\n")[1]
+  token = open("/home/jf712/.slack/ako").read.split("\n")[1]
   res = open("https://slack.com/api/channels.list?token=#{token}&pretty=1", &:read)
   json = JSON.parse(res)
 
