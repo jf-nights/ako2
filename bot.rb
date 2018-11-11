@@ -40,9 +40,10 @@ client.on :close do |data|
   #SlackLib.postMessage("システム終了します......", "#ako-secret-room")
 end
 
-# 切断完了
+# 切断完了時
 client.on :closed do |data|
   puts "Client has disconnected successfully!"
+  client.start!
 end
 
 client.start!
