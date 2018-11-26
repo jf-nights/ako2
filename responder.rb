@@ -1,4 +1,3 @@
-require_relative './lib/docomo'
 # どういった機能で返事をするか
 # メッセージをdataで受け取った場合、中身こんなん
 # {

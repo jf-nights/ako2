@@ -1,6 +1,4 @@
-require 'google/cloud/language'
 require_relative './lib/utils'
-require_relative './lib/gcl'
 require_relative './lib/gohan'
 require_relative './lib/get_channels'
 require_relative './responder'
@@ -13,8 +11,6 @@ class Ako
     @web_client = web_client
     @context = ""
 
-    # Google Cloud Language
-    GCL.init
     # dictionary
     @dictionary = Dictionary.new
     # responder
