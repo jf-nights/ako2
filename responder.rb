@@ -42,7 +42,6 @@ class PatternResponder < Responder
         next if resp.nil?
         return resp.gsub(/%match%/, m.to_s)
       end
-    p 'pattern resp'
     end
   end
 end

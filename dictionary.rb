@@ -41,6 +41,12 @@ class Dictionary
     open(DIC_RANDOM, 'w') do |f|
       f.puts(@random)
     end
+    # pettern辞書書き出し
+    open(DIC_PATTERN, 'w') do |f|
+      @pattern.each do |ptn_item|
+        f.puts(ptn_item.make_line)
+      end
+    end
   end
 
 end
