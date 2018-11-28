@@ -14,29 +14,10 @@ class Responder
     @dictionary = dictionary
   end
 
-  def response
+  def response(text, parts, mood)
     return nil
   end
 end
-
-=begin
-# docomoの雑談API
-class DocomoResponder < Responder
-  def response(text, context)
-    response = DocomoAPI.post(text, context)
-
-    if response["requestError"] == nil
-      # 成功時は"返事 [by DocomoAPI]" で返す
-      message = response["utt"] + " [by DocomoAPI]"
-      context = response["context"]
-      return {"message"=>message, "context"=>context}
-    else
-      # 失敗時はresponseをそのまま返し、contextは空にする
-      return {"message"=>response, "context"=>nil}
-    end
-  end
-end
-=end
 
 # ～とはなんですか
 class WhatResponder < Responder
@@ -47,7 +28,21 @@ end
 
 # Randomに返す
 class RandomResponder < Responder
-  def response(text)
+  def response(text, parts, mod)
     resp = @dictionary.random[rand(@dictionary.random.size)]
+  end
+end
+
+class PatternResponder < Responder
+  def response(text, parts, mood)
+    @dictionary.pattern.each do |ptn_item|
+      if m = ptn_item.match(text)
+        resp = ptn_item.match(text)
+        resp = ptn_item.choice(mood)
+        next if resp.nil?
+        return resp.gsub(/%match%/, m.to_s)
+      end
+    p 'pattern resp'
+    end
   end
 end
