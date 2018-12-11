@@ -25,13 +25,28 @@ class Dictionary
   end
 
   # 外から呼ぶ
-  def study(text)
+  def study(text, parts)
     study_random(text)
+    study_pattern(text, parts)
   end
 
   # randomというか、全発言を保存してるだけ
   def study_random(text)
     @random << text if !@random.include?(text)
+  end
+
+  def study_pattern(text, parts)
+    parts.each do |word, part|
+      next unless Morph::keyword?(part)
+      word_pattern = Regexp.new(word)
+      duped = @pattern.find{|ptn_item| ptn_item.pattern == word}
+      if duped
+        p 'duped'
+        duped.add_phrase(text)
+      else
+        @pattern.push(PatternItem.new(word, text))
+      end
+    end
   end
 
   # 定期的にファイルに書き出し
@@ -52,6 +67,7 @@ class Dictionary
 end
 
 class PatternItem
+  attr_reader :pattern, :modify, :phrases
   def initialize(pattern, phrases)
     pair = pattern.split(":", 2)
     if pair.size == 2

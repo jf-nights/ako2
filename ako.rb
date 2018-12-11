@@ -104,15 +104,17 @@ class Ako
     end
 =end
 
+
+        # これ以降のstudy, responderに必要な
+        parts = Morph::analyze(data.text)
         # --------------------------
         # 発言内容を覚える ...oO(<= "覚える" とは......?)
         # この時点では起動してるメモリ上に乗っているだけなので、
         # 何かしらの手段で @dictionary#save を呼ぶ必要がある...
-        @dictionary.study(data.text)
+        @dictionary.study(data.text, parts)
 
         # --------------------------
         # 今回のreponderで返答作成
-        parts = Morph::analyze(data.text)
         res = responder.response(data.text, parts, 0.0)
         puts res
 
