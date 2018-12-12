@@ -3,6 +3,7 @@ require_relative './lib/gohan'
 require_relative './lib/get_channels'
 require_relative './responder'
 require_relative './dictionary'
+require_relative './lib/morph'
 
 # 阿古さん本体
 class Ako
@@ -10,13 +11,14 @@ class Ako
     @slack_client = slack_client
     @web_client = web_client
     @context = ""
+    Morph::init_analyzer
 
     # dictionary
     @dictionary = Dictionary.new
     # responder
     @responder_What = WhatResponder.new(@dictionary)
     @responder_Random = RandomResponder.new(@dictionary)
-    #@responder_DocomoAPI = DocomoResponder.new(@dictionary)
+    @responder_Pattern = PatternResponder.new(@dictionary)
 
     puts "ready......!"
   end
@@ -83,8 +85,10 @@ class Ako
         case rand(100)
         when 0
           responder = @responder_What
-        when 0..99
+        when 1..50
           responder = @responder_Random
+        when 51..99
+          responder = @responder_Pattern
         end
 
 =begin
@@ -100,15 +104,18 @@ class Ako
     end
 =end
 
+
+        # これ以降のstudy, responderに必要な
+        parts = Morph::analyze(data.text)
         # --------------------------
         # 発言内容を覚える ...oO(<= "覚える" とは......?)
         # この時点では起動してるメモリ上に乗っているだけなので、
         # 何かしらの手段で @dictionary#save を呼ぶ必要がある...
-        @dictionary.study(data.text)
+        @dictionary.study(data.text, parts)
 
         # --------------------------
         # 今回のreponderで返答作成
-        res = responder.response(data.text)
+        res = responder.response(data.text, parts, 0.0)
         puts res
 
         # --------------------------

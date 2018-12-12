@@ -28,6 +28,7 @@ GEM
       domain_name (~> 0.5)
     i18n (1.1.1)
       concurrent-ruby (~> 1.0)
+<<<<<<< HEAD
     mechanize (2.7.6)
       domain_name (~> 0.5, >= 0.5.1)
       http-cookie (~> 1.0)
@@ -41,6 +42,9 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2018.0812)
     mini_portile2 (2.3.0)
+=======
+    mecab (0.996)
+>>>>>>> pattern
     minitest (5.11.3)
     multipart-post (2.0.0)
     net-http-digest_auth (1.4.1)
@@ -74,7 +78,11 @@ PLATFORMS
 
 DEPENDENCIES
   async-websocket
+<<<<<<< HEAD
   mechanize
+=======
+  mecab
+>>>>>>> pattern
   slack-ruby-client
 
 BUNDLED WITH
