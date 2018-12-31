@@ -17,7 +17,7 @@ ako = Ako.new(client, web_client)
 
 # 起動時
 client.on :hello do
-  SlackLib.postMessage("システム起動しました！", "#ako-secret-room")
+  SlackLib.postMessage("システム起動しました！", "#reian-test")
   puts "connected!"
 end
 
@@ -26,7 +26,9 @@ client.on :message do |data|
   # C9PDZET9V #ako-secret-memo
   # C03ANSF4X #reiankyo
   # CB8CHL7CM #どこやっけ
-  if data.channel == "C9PDZET9V" || data.channel == "CB8CHL7CM"
+  # GEPND1JG2 #reian-test
+  puts data.channel
+  if data.channel == "C9PDZET9V" || data.channel == "CB8CHL7CM" || data.channel == "GEPND1JG2"
     if data.user != "U03K389H4"
       puts "recieve"
       ako.recieve(data)

@@ -1,5 +1,6 @@
 require_relative './lib/utils'
 require_relative './lib/gohan'
+require_relative './lib/omikuji'
 require_relative './lib/get_channels'
 require_relative './responder'
 require_relative './dictionary'
@@ -72,56 +73,41 @@ class Ako
       end
 
     else
-      if data.channel == SECRET_MEMO
-        puts data.user
+      if data.channel == SECRET_MEMO || data.channel == TEST
+        if data.text =~ /^omikuji$/
+          message = run_omikuji(data.user)
+          postByWebAPI(@web_client, message, data.channel)
+        else
+          puts data.user
 
-=begin
-    gclResult = GCL.getScore(data.text)
-    score, magnitude = gclResult[0], gclResult[1]
-    param = makeParam("Score : #{score}, Magnitude : #{magnitude} です")
-=end
+          case rand(100)
+          when 0
+            responder = @responder_What
+          when 1..50
+            responder = @responder_Random
+          when 51..99
+            responder = @responder_Pattern
+          end
 
 
-        case rand(100)
-        when 0
-          responder = @responder_What
-        when 1..50
-          responder = @responder_Random
-        when 51..99
-          responder = @responder_Pattern
+          # これ以降のstudy, responderに必要な
+          parts = Morph::analyze(data.text)
+          # --------------------------
+          # 発言内容を覚える ...oO(<= "覚える" とは......?)
+          # この時点では起動してるメモリ上に乗っているだけなので、
+          # 何かしらの手段で @dictionary#save を呼ぶ必要がある...
+          @dictionary.study(data.text, parts)
+
+          # --------------------------
+          # 今回のreponderで返答作成
+          res = responder.response(data.text, parts, 0.0)
+          puts res
+
+          # --------------------------
+          # paramに発言内容とチャンネルが入っているので投稿
+          param = makeParam(res, data.channel) if res != nil
+          @slack_client.message(param) if param != nil
         end
-
-=begin
-    # ---------------------------
-    # docomo の雑談API
-    # ---------------------------
-    if data.text =~ /^[dｄ] (.*)/
-      responder = @responder_DocomoAPI
-      #resp = @responder_DocomoAPI.response($1, @context)
-      #param = makeParam(resp["message"])
-      #@context = resp["context"] if resp["context"] != nil
-      #puts @context
-    end
-=end
-
-
-        # これ以降のstudy, responderに必要な
-        parts = Morph::analyze(data.text)
-        # --------------------------
-        # 発言内容を覚える ...oO(<= "覚える" とは......?)
-        # この時点では起動してるメモリ上に乗っているだけなので、
-        # 何かしらの手段で @dictionary#save を呼ぶ必要がある...
-        @dictionary.study(data.text, parts)
-
-        # --------------------------
-        # 今回のreponderで返答作成
-        res = responder.response(data.text, parts, 0.0)
-        puts res
-
-        # --------------------------
-        # paramに発言内容とチャンネルが入っているので投稿
-        param = makeParam(res, data.channel) if res != nil
-        @slack_client.message(param) if param != nil
 
       end
     end
