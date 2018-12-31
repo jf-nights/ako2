@@ -5,3 +5,6 @@ gem "slack-ruby-client"
 gem "async-websocket"
 gem "mechanize"
 gem "mecab"
+
+gem "sinatra"
+gem "sinatra-contrib"
