@@ -12,10 +12,13 @@ if [ $count = 1 ]; then
   if [ $user = "jf712" ]; then
     # boku
     ps aux | grep $PROCCESS_NAME | grep -v grep | awk '{print "kill -9", $2}' | sh
+    echo "kill proccess!"
     cd /home/jf712/projects/ako2; $BUNDLE exec ruby ako_run.rb
+    echo "exec ako san!"
   fi
 else
   echo "proccess NOT found!"
   cd /home/jf712/projects/ako2; $BUNDLE exec ruby ako_run.rb
+  echo "exec ako san!"
 fi
 
