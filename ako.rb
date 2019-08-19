@@ -74,7 +74,7 @@ class Ako
 
     else
       if data.channel == SECRET_MEMO || data.channel == TEST
-        if data.text =~ /^omikuji$/
+        if data.text =~ /^(omikuji|おみくじ)$/
           message = run_omikuji(data.user)
           postByWebAPI(@web_client, message, data.channel)
         else
