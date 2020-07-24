@@ -18,7 +18,6 @@ ako = Ako.new(client, web_client)
 # 起動時
 client.on :hello do
   SlackLib.postMessage("システム起動しました！", "#reian-test")
-  puts "connected!"
 end
 
 # メッセージ受信
@@ -38,13 +37,11 @@ end
 
 # 切断時
 client.on :close do |data|
-  # わざわざこのためだけに使うのもアレやけど......
-  SlackLib.postMessage("システム終了します......", "#ako-secret-room")
 end
 
 # 切断完了時
 client.on :closed do |data|
-  puts "Client has disconnected successfully!"
+  SlackLib.postMessage("切断しました!", "#reian-test")
 end
 
 client.start!
