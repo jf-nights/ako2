@@ -27,7 +27,7 @@ client.on :message do |data|
   # CB8CHL7CM #どこやっけ
   # GEPND1JG2 #reian-test
   puts data.channel
-  if data.channel == "C9PDZET9V" || data.channel == "CB8CHL7CM" || data.channel == "GEPND1JG2"
+  if data.channel == "C9PDZET9V" || data.channel == "CB8CHL7CM" || data.channel == "GEPND1JG2" || data.channel == REIAN_SMASH
     if data.user != "U03K389H4"
       puts "recieve"
       ako.recieve(data)

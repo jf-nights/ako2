@@ -3,6 +3,7 @@ SECRET_MEMO = "C9PDZET9V"
 REIANKYO = "C03ANSF4X"
 DOKO = "CB8CHL7CM"
 TEST = "GEPND1JG2"
+REIAN_SMASH = "CLRL5FND9"
 
 # なんかいろいろ使い回しそうな関数
 def makeParam(text, channel="C9PDZET9V")

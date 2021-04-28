@@ -71,6 +71,12 @@ class Ako
       if data.text =~ /^save$/
         save()
       end
+    elsif data.channel == REIAN_SMASH
+      # さぽブラ申し込み
+      #if data.text =~ /eSS平日スマブラ対戦会/
+      #  puts "aaaaaaaaaaaaaa"
+      #  postByWebAPI(@web_client, "@jf712 申し込みしてください!!!", data.channel)
+      #end
 
     else
       if data.channel == SECRET_MEMO || data.channel == TEST
