@@ -8,4 +8,5 @@ gem "mecab"
 
 gem "sinatra"
 gem "sinatra-contrib"
+gem "sinatra-activerecord"
 gem "sqlite3"
