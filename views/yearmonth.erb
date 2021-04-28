@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    これは <%= @year %>年 <%= @month %>月のおかね。
+    <table border="1">
+      <tr>
+        <td>日付</td>
+        <td>支払い先</td>
+        <td>支払い額</td>
+        <td>分割払い（回目）</td>
+        <td>分割払い（全部）</td>
+        <td>分類1</td>
+        <td>分類2</td>
+      </tr>
+      <% @result.each do |data| %>
+        <tr>
+          <td><%= data.date %></td>
+          <td><%= data.payee %></td>
+          <td><%= data.amount %></td>
+          <td><%= data.numberinstallment %></td>
+          <td><%= data.installment %></td>
+          <td><%= data.category1 %></td>
+          <td><%= data.category2 %></td>
+        </tr>
+      <% end %>
+    </table>
+
+  </body>
+</html>
