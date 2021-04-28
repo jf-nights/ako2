@@ -1,18 +1,28 @@
 <html>
   <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
   </head>
   <body>
-    これは <%= @year %>年 <%= @month %>月のおかね。
-    <table border="1">
+    これは <%= @year %>年 <%= @month %>月のおかね。<br>
+    <% sum = 0 %>
+    <% @result.each do |data| %>
+      <% sum += data.amount.to_i %>
+    <% end %>
+    総額 <%= sum %> 円使いました。
+    <table class="table table-striped">
       <tr>
-        <td>日付</td>
-        <td>支払い先</td>
-        <td>支払い額</td>
-        <td>分割払い（回目）</td>
-        <td>分割払い（全部）</td>
-        <td>分類1</td>
-        <td>分類2</td>
+        <th>日付</th>
+        <th>支払い先</th>
+        <th>支払い額</th>
+        <th>分割払い（回目）</th>
+        <th>分割払い（全部）</th>
+        <th>分類1</th>
+        <th>分類2</th>
       </tr>
       <% @result.each do |data| %>
         <tr>
