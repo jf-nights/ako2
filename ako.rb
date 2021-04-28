@@ -123,5 +123,6 @@ class Ako
 
   def save
     @dictionary.save
+    puts "save!"
   end
 end
