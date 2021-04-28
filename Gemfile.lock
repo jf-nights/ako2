@@ -84,6 +84,7 @@ GEM
       gli
       hashie
       websocket-driver
+    sqlite3 (1.4.2)
     tilt (2.0.10)
     timers (4.3.3)
     unf (0.1.4)
@@ -105,6 +106,7 @@ DEPENDENCIES
   sinatra
   sinatra-contrib
   slack-ruby-client
+  sqlite3
 
 BUNDLED WITH
    1.17.1
