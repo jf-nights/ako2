@@ -18,7 +18,10 @@ get "/:year/:month" do |year, month|
   @month = month
   @result = Goldpoint.where("date like ?", "%#{year}/#{month}%")
   pp @result.all
-  
-  erb :yearmonth
+  if @result.all == []
+    erb :noyearmonth
+  else
+    erb :yearmonth
+  end
 end
 
