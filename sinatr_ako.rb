@@ -13,7 +13,8 @@ get "/" do
   "hello~~~~"
 end
 
-get "/:year/:month" do |year, month|
+# /4ケタ/2ケタ へのアクセス
+get %r{/([\d]{4})/([\d]{2})} do |year, month|
   @year = year
   @month = month
   @result = Goldpoint.where("date like ?", "%#{year}/#{month}%")
@@ -25,3 +26,11 @@ get "/:year/:month" do |year, month|
   end
 end
 
+get "/edit/:id" do
+ pp @result = Goldpoint.find_by_id(params[:id])
+ if @result == nil
+   "idが#{params[:id]}のデータなし！" 
+ else
+   erb :edit_indivisual
+ end
+end

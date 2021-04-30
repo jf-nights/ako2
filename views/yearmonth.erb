@@ -16,6 +16,7 @@
     総額 <%= sum %> 円使いました。
     <table class="table table-striped">
       <tr>
+        <th hidden>ID</th>
         <th>日付</th>
         <th>支払い先</th>
         <th>支払い額</th>
@@ -23,9 +24,11 @@
         <th>分割払い（全部）</th>
         <th>分類1</th>
         <th>分類2</th>
+        <th>編集</th>
       </tr>
       <% @result.each do |data| %>
         <tr>
+          <td hidden><%= data.id %></td>
           <td><%= data.date %></td>
           <td><%= data.payee %></td>
           <td><%= data.amount %></td>
@@ -33,6 +36,7 @@
           <td><%= data.installment %></td>
           <td><%= data.category1 %></td>
           <td><%= data.category2 %></td>
+          <td><button class="btn btn-primary" type="submit" name="edit_category" value="" onclick=<%= "location.href="+"'/edit/#{data.id}'" %>>編集</button></td>
         </tr>
       <% end %>
     </table>
