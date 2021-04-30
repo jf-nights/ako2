@@ -32,6 +32,8 @@ get %r{/edit/([\d]+)} do |id|
  if @result == nil
    "idが#{params[:id]}のデータなし！" 
  else
+   @year = @result.date.split("/")[0]
+   @month = @result.date.split("/")[1]
    erb :edit_indivisual
  end
 end

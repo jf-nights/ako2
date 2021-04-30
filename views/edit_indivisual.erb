@@ -8,7 +8,8 @@
 
   </head>
   <body>
-    これは <%= @result.id %> の内訳。<br>
+    <a href="/<%= @year %>/<%= @month %>">その月に戻る</a><br>
+    これは id : <%= @result.id %> の内訳です。<br>
     <form action="/regist/<%= @result.id %>" method="post">
       <table class="table table-striped">
         <tr>
