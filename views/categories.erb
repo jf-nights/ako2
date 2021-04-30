@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+  </head>
+  <body>
+    categoryの一覧
+    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    <% if !@msg.nil? %>
+      <div><%= @msg %></div>
+    <% end %>
+    <table class="table table-striped">
+      <tr>
+        <th>支払い先</th>
+        <th>分類1</th>
+        <th>分類2</th>
+        <th>追加</th>
+      </tr>
+      <tr>
+        <form action="/registCategory" method="post">
+          <td><input type="text" class="form-control" name="payee" ></td>
+          <td><input type="text" class="form-control" name="category1"></td>
+          <td><input type="text" class="form-control" name="category2"></td>
+          <td><button class="btn btn-primary" type="submit">追加</button></td>
+        </form>
+      </tr>
+      <% @result.each do |data| %>
+        <tr>
+          <form action="/deleteCategory" method="post">
+            <input type="hidden" name="id" value="<%= data.id %>" >
+            <td><%= data.payee %></td>
+            <td><%= data.category1 %></td>
+            <td><%= data.category2 %></td>
+            <td><button class="btn btn-primary" type="submit">削除</button></td>
+          </form>
+        </tr>
+      <% end %>
+    </table>
+
+  </body>
+</html>
