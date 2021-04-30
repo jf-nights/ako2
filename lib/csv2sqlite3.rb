@@ -7,7 +7,7 @@ require 'active_record'
 # goldpointの明細CSVからテーブルにいい感じに入れてくれるやつ
 ActiveRecord::Base.establish_connection(
   adapter: "sqlite3",
-  database: "./data/db/goldpoint.sqlite3"
+  database: "/home/jf712/projects/ako2/data/db/goldpoint.sqlite3"
 )
 
 class Goldpoint < ActiveRecord::Base
