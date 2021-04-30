@@ -9,41 +9,42 @@
   </head>
   <body>
     これは <%= @result.id %> の内訳。<br>
-   <table class="table table-striped">
-      <tr>
-        <th hidden>ID</th>
-        <td hidden><%= @result.id %></td>
-      </tr>
-      <tr>
-        <th>日付</th>
-        <td><%= @result.date %></td>
-      </tr>
-      <tr>
-        <th>支払い先</th>
-        <td><%= @result.payee %></td>
-      </tr>
-      <tr>
-        <th>支払い額</th>
-        <td><%= @result.amount %></td>
-      </tr>
-      <tr>
-        <th>分割払い（回目）</th>
-        <td><%= @result.numberinstallment %></td>
-      </tr>
-      <tr>
-        <th>分割払い（全部）</th>
-        <td><%= @result.installment %></td>
-      </tr>
-      <tr>
-        <th>分類1</th>
-        <td><input type="text" value="<%= @result.category1 %>"</td>
-      </tr>
-      <tr>
-        <th>分類2</th>
-        <td><input type="text" value="<%= @result.category2 %>"</td>
-      </tr>
-    </table>
-        <td><button class="btn btn-primary" type="submit" name="edit_category" value="" onclick=<%= "location.href="+"'/regist/#{@result.id}'" %>>登録</button></td>
-
+    <form action="/regist/<%= @result.id %>" method="post">
+      <table class="table table-striped">
+        <tr>
+          <th hidden>ID</th>
+          <td hidden><%= @result.id %></td>
+        </tr>
+        <tr>
+          <th>日付</th>
+          <td><%= @result.date %></td>
+        </tr>
+        <tr>
+          <th>支払い先</th>
+          <td><%= @result.payee %></td>
+        </tr>
+        <tr>
+          <th>支払い額</th>
+          <td><%= @result.amount %></td>
+        </tr>
+        <tr>
+          <th>分割払い（回目）</th>
+          <td><%= @result.numberinstallment %></td>
+        </tr>
+        <tr>
+          <th>分割払い（全部）</th>
+          <td><%= @result.installment %></td>
+        </tr>
+        <tr>
+          <th>分類1</th>
+          <td><input type="text" name="category1" value="<%= @result.category1 %>"</td>
+        </tr>
+        <tr>
+          <th>分類2</th>
+          <td><input type="text" name="category2" value="<%= @result.category2 %>"</td>
+        </tr>
+      </table>
+      <button class="btn btn-primary" type="submit"value="" >更新する！</button>
+    </form>
   </body>
 </html>

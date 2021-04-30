@@ -26,11 +26,28 @@ get %r{/([\d]{4})/([\d]{2})} do |year, month|
   end
 end
 
-get "/edit/:id" do
- pp @result = Goldpoint.find_by_id(params[:id])
+# /edit/:id へのアクセス
+get %r{/edit/([\d]+)} do |id|
+ pp @result = Goldpoint.find_by_id(id)
  if @result == nil
    "idが#{params[:id]}のデータなし！" 
  else
    erb :edit_indivisual
  end
+end
+
+post "/regist/:id" do
+  pp params
+  id = params[:id]
+  data = Goldpoint.find_by_id(id)
+  if data == nil
+    puts "nil~~~~~~~~~~~~~~~~~~~~~~~~"
+  else
+    # DBへの登録
+    data.category1 = params[:category1]
+    data.category2 = params[:category2]
+    data.save
+    puts "regist~~~~~~~~~~~~~~~~~~~~~~~"
+  end
+  redirect to("/edit/#{id}")
 end
