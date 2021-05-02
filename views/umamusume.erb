@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+  </head>
+  <body>
+    これはうま。<br>
+    <form action="/checkuma" method="post">
+      <textarea class="form-control" id="uma" name="syutuba" cols="60" rows="10"></textarea>
+      <button class="btn btn-primary">かくにん</button>
+    </form>
+    <div>
+      <% if !@result.nil? %>
+        <% @result.each do |d| %>
+          <%= pp d %>
+        <% end %>
+      <% end %>
+    </div>
+  </body>
+</html>

@@ -2,6 +2,7 @@ Bundler.require
 require 'sinatra/reloader'
 require 'sinatra/activerecord'
 require_relative './sinatra/config'
+require_relative './lib/uma.rb'
 
 SQLITE = "/home/jf712/projects/ako2/data/db/goldpoint.sqlite3"
 set :database, {adapter: "sqlite3", database: SQLITE}
@@ -105,4 +106,26 @@ post "/deleteCategory" do
     session[:msg] = "削除成功！"
   end
   redirect "/categories"
+end
+
+get '/umamusume' do
+  @result = session[:checkumaresult] if !session[:checkumaresult].nil?
+  erb :umamusume
+end
+
+post "/checkuma" do
+  result = []
+  data = params[:syutuba]
+  data = data.split("\n")
+  data.each do |uma|
+    next if uma == nil
+    #p name = uma.split("\r\n")[0]
+    name = uma.gsub(/\r/, "")
+    pedigree = get_pedigree(name)
+    sleep(0.5)
+    result << pedigree
+  end
+
+  session[:checkumaresult] = result
+  redirect "/umamusume"
 end
